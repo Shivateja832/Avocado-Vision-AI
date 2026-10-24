@@ -155,8 +155,21 @@ farms, cameras, and collection sessions absent from training; freeze the
 models and decision thresholds before evaluation; then report per-stage
 precision, recall, macro-F1, confusion matrices, detector mAP, and performance
 by acquisition domain. This evidence cannot be produced from the current
-publisher split alone. A Kaggle search also surfaced a 3.7 KB dataset described
-as synthetic, which is not suitable as independent real-orchard validation.
+publisher split alone. We screened the separate 2025 Mendeley/Hugging Face
+strawberry-and-avocado dataset as a possible external holdout. Its publisher
+describes real Maharashtra farm/market collection, but the hosted 758-image
+version has only one `train` split, mixes fruit species, and exposes the
+eight categories as numeric IDs (`0`-`7`) rather than semantic class names.
+Using only the avocado categories would still require trusting an inferred
+label mapping. A separate public technical audit reports mis-scaled or
+ambiguous boxes on portrait images and synthetic cut-out backgrounds; it
+recommends manual checking before use. We therefore did not use its
+unverified labels to claim external performance. See the
+[Mendeley dataset record](https://data.mendeley.com/datasets/zysvgmxcyz/1),
+[Hugging Face dataset card](https://huggingface.co/datasets/Project-AgML/strawberry_avocado_ripeness_detection),
+and [public technical audit](https://github.com/CreAI-mx/agrizar_CV_datasets/blob/chore/initial-import/GROWTH_DATASET_FINDINGS.md).
+A separate 3.7 KB Kaggle result was described as synthetic and is likewise
+not suitable as independent real-orchard validation.
 
 The detector's precision/recall and mAP measure localization as well as class
 assignment; they must not be ranked directly against the crop classifiers'
