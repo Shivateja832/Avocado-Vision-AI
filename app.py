@@ -19,6 +19,12 @@ DEFAULT_MODEL_DIR = ROOT / "models" / "avocado_pure"
 DEFAULT_DETECTOR_MODEL_DIR = ROOT / "models" / "avocado_detection"
 DETECTOR_WEIGHTS = DEFAULT_DETECTOR_MODEL_DIR / "best.pt"
 RESULTS_PATH = DEFAULT_MODEL_DIR / "metrics.json"
+_STREAMLIT_VERSION = tuple(int(part) for part in st.__version__.split(".")[:2])
+_FULL_WIDTH_OPTIONS: dict[str, str | bool] = (
+    {"width": "stretch"}
+    if _STREAMLIT_VERSION >= (1, 50)
+    else {"use_container_width": True}
+)
 
 st.set_page_config(page_title="AvocadoVision AI", page_icon="🥑", layout="wide")
 st.title("AvocadoVision AI")
@@ -119,7 +125,7 @@ with tab_data:
             f'Test: {analysis["test_images"]} images · '
             f'Train majority/minority ratio: {analysis["train_imbalance_ratio"]}:1'
         )
-        st.dataframe(pd.DataFrame(analysis["class_counts"]).T, use_container_width=True)
+        st.dataframe(pd.DataFrame(analysis["class_counts"]).T, **_FULL_WIDTH_OPTIONS)
         st.json(
             {
                 "image_size": analysis["image_size"],
@@ -209,7 +215,7 @@ with tab_models:
             pd.DataFrame.from_dict(
                 detector_rows, orient="index", columns=["Score"]
             ),
-            use_container_width=True,
+            **_FULL_WIDTH_OPTIONS,
         )
 
     results = st.session_state.get("training_results")
@@ -248,7 +254,9 @@ with tab_models:
                     "Inference ms/image": metrics["inference_ms_per_image"],
                 }
             )
-        st.dataframe(pd.DataFrame(rows).set_index("Model"), use_container_width=True)
+        st.dataframe(
+            pd.DataFrame(rows).set_index("Model"), **_FULL_WIDTH_OPTIONS
+        )
         st.caption(
             "Macro F1 weights each class equally; macro recall reveals missed classes. "
             "Use accuracy and the confusion matrices as supporting measures."
@@ -261,7 +269,7 @@ with tab_models:
             columns=results["classes"],
         )
         st.write("Rows are actual labels; columns are predicted labels.")
-        st.dataframe(matrix, use_container_width=True)
+        st.dataframe(matrix, **_FULL_WIDTH_OPTIONS)
         st.write("Per-class report")
         per_class = {
             name: {
@@ -272,7 +280,7 @@ with tab_models:
             for name, details in metric["per_class"].items()
             if name in results["classes"]
         }
-        st.dataframe(pd.DataFrame(per_class).T, use_container_width=True)
+        st.dataframe(pd.DataFrame(per_class).T, **_FULL_WIDTH_OPTIONS)
         st.write("Example test image run")
         st.json(results["example_run"])
         st.info(results["selection_note"])
@@ -344,12 +352,12 @@ with tab_predict:
                         st.image(
                             result["annotated_image"],
                             caption="Detected avocado boxes and predicted stage",
-                            use_container_width=True,
+                            **_FULL_WIDTH_OPTIONS,
                         )
                         if result["detections"]:
                             st.dataframe(
                                 pd.DataFrame(result["detections"]),
-                                use_container_width=True,
+                                **_FULL_WIDTH_OPTIONS,
                             )
                         else:
                             st.info("No avocado-stage boxes were detected.")
@@ -364,7 +372,7 @@ with tab_predict:
                             pd.DataFrame.from_dict(predictions, orient="index").rename_axis(
                                 "Model"
                             ),
-                            use_container_width=True,
+                            **_FULL_WIDTH_OPTIONS,
                         )
                         st.caption(
                             "Confidence is the model's score for the predicted source-dataset class; "
