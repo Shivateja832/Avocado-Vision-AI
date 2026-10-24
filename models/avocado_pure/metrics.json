@@ -1,0 +1,186 @@
+{
+  "dataset": {
+    "data_dir": "C:\\Users\\Shiva Teja\\Desktop\\AvocadoVision AI\\data\\avocado_pure",
+    "total_images": 3996,
+    "valid_images": 3996,
+    "unreadable_count": 0,
+    "unreadable_examples": [],
+    "class_counts": {
+      "overripe": {
+        "train": 1079,
+        "validation": 119,
+        "test": 134
+      },
+      "ripe": {
+        "train": 1089,
+        "validation": 123,
+        "test": 120
+      },
+      "unripe": {
+        "train": 1028,
+        "validation": 157,
+        "test": 147
+      }
+    },
+    "train_images": 3196,
+    "validation_images": 399,
+    "test_images": 401,
+    "train_imbalance_ratio": 1.059,
+    "exact_duplicate_groups": 0,
+    "cross_split_duplicate_groups": 0,
+    "image_size": {
+      "count": 3996,
+      "width_min": 237,
+      "width_median": 315,
+      "width_max": 512,
+      "height_min": 236,
+      "height_median": 445,
+      "height_max": 512,
+      "resolution_iqr_outliers": 5,
+      "aspect_ratio_iqr_outliers": 994,
+      "below_256px_images": 29
+    },
+    "mean_sample_brightness_0_255": 107.78,
+    "brightness_iqr_outliers": 25,
+    "limitations": [
+      "Image-level train/test splitting may not measure generalization to new farms, cameras, or backgrounds.",
+      "The publisher's random image partitions may contain related collection conditions across splits."
+    ]
+  },
+  "classes": [
+    "overripe",
+    "ripe",
+    "unripe"
+  ],
+  "metrics": {
+    "classical_svm": {
+      "accuracy": 0.8703241895261845,
+      "macro_precision": 0.8686756477171205,
+      "macro_recall": 0.8700942566081159,
+      "macro_f1": 0.8677702505827506,
+      "weighted_f1": 0.8708092094937482,
+      "confusion_matrix": [
+        [
+          105,
+          25,
+          4
+        ],
+        [
+          11,
+          109,
+          0
+        ],
+        [
+          10,
+          2,
+          135
+        ]
+      ],
+      "per_class": {
+        "overripe": {
+          "precision": 0.8333333333333334,
+          "recall": 0.7835820895522388,
+          "f1-score": 0.8076923076923077,
+          "support": 134.0
+        },
+        "ripe": {
+          "precision": 0.8014705882352942,
+          "recall": 0.9083333333333333,
+          "f1-score": 0.8515625,
+          "support": 120.0
+        },
+        "unripe": {
+          "precision": 0.9712230215827338,
+          "recall": 0.9183673469387755,
+          "f1-score": 0.9440559440559441,
+          "support": 147.0
+        },
+        "accuracy": 0.8703241895261845,
+        "macro avg": {
+          "precision": 0.8686756477171205,
+          "recall": 0.8700942566081159,
+          "f1-score": 0.8677702505827506,
+          "support": 401.0
+        },
+        "weighted avg": {
+          "precision": 0.8743464374752216,
+          "recall": 0.8703241895261845,
+          "f1-score": 0.8708092094937482,
+          "support": 401.0
+        }
+      },
+      "inference_ms_per_image": 37.500952369085816,
+      "training_seconds": 229.27393409999786
+    },
+    "compact_cnn": {
+      "accuracy": 0.7930174563591023,
+      "macro_precision": 0.791328755033163,
+      "macro_recall": 0.787545266862964,
+      "macro_f1": 0.7888615243023173,
+      "weighted_f1": 0.7956781100157401,
+      "confusion_matrix": [
+        [
+          98,
+          32,
+          4
+        ],
+        [
+          31,
+          88,
+          1
+        ],
+        [
+          12,
+          3,
+          132
+        ]
+      ],
+      "per_class": {
+        "overripe": {
+          "precision": 0.6950354609929078,
+          "recall": 0.7313432835820896,
+          "f1-score": 0.7127272727272728,
+          "support": 134.0
+        },
+        "ripe": {
+          "precision": 0.7154471544715447,
+          "recall": 0.7333333333333333,
+          "f1-score": 0.7242798353909465,
+          "support": 120.0
+        },
+        "unripe": {
+          "precision": 0.9635036496350365,
+          "recall": 0.8979591836734694,
+          "f1-score": 0.9295774647887324,
+          "support": 147.0
+        },
+        "accuracy": 0.7930174563591023,
+        "macro avg": {
+          "precision": 0.791328755033163,
+          "recall": 0.787545266862964,
+          "f1-score": 0.7888615243023173,
+          "support": 401.0
+        },
+        "weighted avg": {
+          "precision": 0.7995597177206618,
+          "recall": 0.7930174563591023,
+          "f1-score": 0.7956781100157401,
+          "support": 401.0
+        }
+      },
+      "device": "cpu",
+      "epochs_run": 10,
+      "best_epoch": 6,
+      "best_validation_macro_f1": 0.7919582224030163,
+      "inference_ms_per_image": 16.03214214464471
+    }
+  },
+  "example_run": {
+    "image": "data\\avocado_pure\\test\\overripe\\colored_T10_d10_122_b_3_jpg_jpg.rf.34cef4a98de8d345719c0a44d1b3064c__object_000.jpg",
+    "actual_label": "overripe",
+    "classical_svm_prediction": "ripe",
+    "compact_cnn_prediction": "overripe"
+  },
+  "model_selection": "Select by macro F1 and macro recall, with accuracy and the confusion matrix as supporting measures; compare only on the untouched test split.",
+  "selection_note": "Best macro F1 on this test split: 0.868. Scores describe the supplied avocado image subset, not guaranteed production performance."
+}
