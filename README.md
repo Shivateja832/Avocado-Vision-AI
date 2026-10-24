@@ -72,8 +72,8 @@ under `models/`, then deploy `app.py` from the Streamlit Community Cloud
 dashboard. The prepared datasets under `data/` are excluded from Git; dataset
 inspection can use the saved evaluation results, and data can be regenerated
 with the preparation scripts.
-The root `packages.txt` installs `libgl1`, which OpenCV needs for YOLO
-inference on the Linux host.
+The root `packages.txt` installs the `libgl1` and `libglib2.0-0` system
+libraries required by OpenCV/Ultralytics inference on the Linux host.
 
 A public URL is verified only after the repository is connected and the
 deployed app is smoke-tested. This workspace does not include GitHub or
