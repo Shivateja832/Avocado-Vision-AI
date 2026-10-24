@@ -131,6 +131,33 @@ generic class result is poor; this detector is an evaluated assignment
 baseline, not production-ready. The reduced training subset and five epochs
 limit the strength of this result.
 
+## Deployment and production-readiness evidence
+
+The application is publicly deployed on
+[Streamlit Community Cloud](https://avocado-vision-ai-shivateja832.streamlit.app/)
+from [its GitHub repository](https://github.com/Shivateja832/Avocado-Vision-AI).
+The hosted page responds successfully, and live smoke tests have exercised
+both crop classification and full-scene detection. This verifies that the
+packaged app and saved weights can load and run inference in the hosted
+environment. It is operational evidence only—not evidence of real-world
+accuracy, service-level availability, or generalization.
+
+The strongest available accuracy evidence remains the publisher-held-out
+test split above. The publisher does not document farm-, camera-, or
+collection-session-independent partitions, and the data available here do not
+provide a verified independent, labeled orchard test set. The full-scene
+detector's 7.14% mAP@0.5 for generic `avocado` is a material weakness.
+Accordingly, neither model should be described as validated for production
+decisions; low-confidence or ambiguous predictions require human review.
+
+To establish field generalization, obtain expert-labeled avocado images from
+farms, cameras, and collection sessions absent from training; freeze the
+models and decision thresholds before evaluation; then report per-stage
+precision, recall, macro-F1, confusion matrices, detector mAP, and performance
+by acquisition domain. This evidence cannot be produced from the current
+publisher split alone. A Kaggle search also surfaced a 3.7 KB dataset described
+as synthetic, which is not suitable as independent real-orchard validation.
+
 The detector's precision/recall and mAP measure localization as well as class
 assignment; they must not be ranked directly against the crop classifiers'
 accuracy or macro F1. The crop SVM is the selected crop-classification model,
@@ -185,9 +212,10 @@ ms/image on this machine. The full-scene detector achieved 53.32% precision,
 74.46% recall, and 53.58% mAP@0.5 on all 453 held-out test scenes. These are
 local dataset results, not a production guarantee: deployment performance
 must be measured on independent orchard/camera data with representative
-lighting, cultivars, and collection conditions. The app runs locally; there
-is no public cloud deployment because this workspace has no connected
-repository/account authorization.
+lighting, cultivars, and collection conditions. The app is publicly deployed,
+and both hosted prediction workflows have passed smoke tests. Those checks
+prove operational inference only; the current data do not establish
+independent-field performance or a production accuracy guarantee.
 
 ### 2. What are the drawbacks?
 
@@ -222,6 +250,7 @@ Most effort went into confirming that the replacement source has only avocado
 classes, verifying its labels and published splits, extracting and auditing the
 stage-specific crops and full-scene annotations, then training and evaluating
 the SVM, CNN, and YOLO detector. The remaining effort integrated dataset
-preparation, measured examples, and both prediction workflows into the local
-app. Public deployment remains blocked until a GitHub repository and account
-authorization are provided.
+preparation, measured examples, and both prediction workflows into the app,
+then deploying and smoke-testing the public version. Establishing field
+generalization remains future work because the available dataset does not
+include an independently sourced, labeled orchard test set.

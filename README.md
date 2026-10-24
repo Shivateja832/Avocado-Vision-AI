@@ -66,18 +66,23 @@ limitations, and all required assignment answers.
 
 ## Public deployment
 
-The app is prepared for **Streamlit Community Cloud**. Connect a GitHub
-repository containing `app.py`, `requirements.txt`, and the trained weights
-under `models/`, then deploy `app.py` from the Streamlit Community Cloud
-dashboard. The prepared datasets under `data/` are excluded from Git; dataset
-inspection can use the saved evaluation results, and data can be regenerated
-with the preparation scripts.
+The application is deployed on **Streamlit Community Cloud**:
+[open AvocadoVision AI](https://avocado-vision-ai-shivateja832.streamlit.app/).
+Its source repository is [Shivateja832/Avocado-Vision-AI](https://github.com/Shivateja832/Avocado-Vision-AI).
+The public deployment has been smoke-tested for the crop-classification and
+full-scene detection workflows. This confirms that the hosted application
+loads and can run inference; it does not establish production accuracy or
+generalization to new farms, cameras, or collection conditions.
+
+To deploy a fork, connect its GitHub repository in the Streamlit Community
+Cloud dashboard and select `app.py` as the entry point. The prepared datasets
+under `data/` are excluded from Git; inference uses the saved model artifacts
+under `models/`, and data can be regenerated with the preparation scripts.
 The root `packages.txt` installs the `libgl1` and `libglib2.0-0` system
 libraries required by OpenCV/Ultralytics inference on the Linux host.
 
-A public URL is verified only after the repository is connected and the
-deployed app is smoke-tested. This workspace does not include GitHub or
-Streamlit account credentials. Do not commit account secrets or Kaggle tokens.
+The deployed app is a demonstration, not a production service with a verified
+uptime or accuracy guarantee. Do not commit account secrets or Kaggle tokens.
 
 ## Verification
 
