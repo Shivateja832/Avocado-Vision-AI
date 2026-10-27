@@ -193,6 +193,25 @@ per-stage precision, recall, macro-F1, confusion matrices, detector mAP, and
 performance by acquisition domain. The current external result is not a
 substitute for that multi-domain study.
 
+### Open gaps, root causes, and closure criteria
+
+The following are the remaining evidence/performance gaps after code, tests,
+and deployment smoke checks. They are not hidden TODOs or a claim that the
+assignment sections were omitted.
+
+| Status | Gap | Root cause supported by current evidence | Complete fix / closure evidence |
+|---|---|---|---|
+| Open; requires new data | No verified multi-farm/camera generalization result | The primary source does not document farm/session-independent splits. The one available external source has a single publisher split and no farm/camera identifiers suitable for grouped evaluation. | Collect expert-labeled avocado samples from multiple independent acquisition groups; reserve at least one farm/camera/session group as a locked test set. Report per-group and aggregate metrics without tuning on that test set. |
+| Open; diagnosis not isolated | Large cross-source crop-score drop | The evaluation scores are low, but the external mapping is inferred/coarsened and some boxes were uncertain. Therefore current evidence cannot separate domain shift from label/crop/annotation mismatch. | Have qualified reviewers confirm each retained crop's species and stage, correct/exclude bad boxes, and publish the adjudication protocol. Re-evaluate the frozen models; use separate training/validation data for any improvement and keep a new final test untouched. |
+| Open; needs model work and data | Weak full-scene generic-avocado detection | The measured test mAP@0.5 for generic `avocado` is 7.14%; the recorded training run used 400 scenes, 192-pixel inputs, and five epochs. | Train/compare detector configurations using the complete permitted training split and validation data; select settings on validation only. Evaluate once on the existing untouched publisher test, then obtain independent scene annotations for a field claim. |
+| Verified for the assignment demo, not an uptime guarantee | Hosted application operations | The deployed endpoint returned HTTP 200 and local tests passed, but this is a point-in-time smoke check, not continuous availability or service-level evidence. | For the assignment demo, re-run the smoke check at handoff. Any uptime/SLA claim would require monitoring over an agreed period; no such requirement or monitoring dataset is present here. |
+| Resolved in the project | Required assignment deliverables and basic regression checks | Two crop approaches, a detector, dataset inspection, measured metrics, an example, report answers, and runnable deployment are present. | The project test suite and compile check pass; keep them as release checks when changing code. |
+
+No evidence currently supports changing the production/generalization score to
+full marks. Code changes alone cannot supply missing expert labels or
+independent farm/camera samples. Do not train on the current external
+evaluation set and then reuse its score as an unbiased test result.
+
 The detector's precision/recall and mAP measure localization as well as class
 assignment; they must not be ranked directly against the crop classifiers'
 accuracy or macro F1. The crop SVM is the selected crop-classification model,
