@@ -186,6 +186,22 @@ The reproducible preparation and evaluation command is
 git-ignored `data/external_avocado_test/`, and metrics are written to
 `models/avocado_pure/external_test_metrics.json`.
 
+Alternative public sources were screened before treating this as field
+validation. The [Fruits-360 repository](https://github.com/Horea94/Fruit-Images-Dataset)
+contains avocado-only folders named `Avocado` and `Avocado ripe` (143 and 166
+test images in the inspected snapshot), but it has only a binary stage
+distinction, 100x100 images, white backgrounds, and rotated views; its
+README says the dataset has moved to the
+[Fruits-360 organization](https://github.com/fruits-360/). It cannot test the
+overripe class or represent independent orchard/camera conditions. The
+[hyperspectral avocado study](https://doi.org/10.15159/ar.22.027) concerns a
+different imaging modality and defect task, so it is not interchangeable
+with the RGB ripeness labels required here. Searches of Hugging Face dataset listings, GitHub repository search, and
+DataCite records during this audit did not identify another accessible RGB,
+avocado-only, three-stage dataset with verified semantic labels and
+independent farm/camera identifiers. These candidates therefore do not close
+the stated field-validation gap.
+
 To establish stronger field generalization, obtain expert-labeled avocado
 images from multiple farms, cameras, and collection sessions absent from
 training. Freeze models and thresholds before evaluation, then report
