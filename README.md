@@ -64,6 +64,20 @@ evaluated with precision, recall, mAP@0.5, and mAP@0.5:0.95 on the publisher's
 test split. See [REPORT.md](./REPORT.md) for measured results, dataset audit,
 limitations, and all required assignment answers.
 
+An optional cross-source crop-classification evaluation is available:
+
+```powershell
+python validate_external_avocado.py
+```
+
+It downloads only single-object avocado annotations from a separately
+published dataset, saves provenance under the git-ignored
+`data/external_avocado_test/`, and evaluates the existing SVM and CNN without
+training or tuning on those images. Metrics are written to
+`models/avocado_pure/external_test_metrics.json`. The source exposes numeric
+labels, so the crosswalk is approximate; this is one-source evidence, not a
+multi-farm benchmark. See the report before interpreting its scores.
+
 ## Public deployment
 
 The application is deployed on **Streamlit Community Cloud**:
@@ -88,7 +102,7 @@ uptime or accuracy guarantee. Do not commit account secrets or Kaggle tokens.
 
 ```powershell
 python -m pytest -q tests
-python -m compileall -q app.py train.py train_detector.py prepare_avocado_dataset.py prepare_detector_dataset.py avocado_vision tests
+python -m compileall -q app.py train.py train_detector.py prepare_avocado_dataset.py prepare_detector_dataset.py validate_external_avocado.py avocado_vision tests
 ```
 
 For local use, run `streamlit run app.py`.

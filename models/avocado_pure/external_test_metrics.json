@@ -1,0 +1,135 @@
+{
+  "dataset_id": "Project-AgML/strawberry_avocado_ripeness_detection",
+  "dataset_commit": "321578b982118c7395b6cc3c8093396886a2fa99",
+  "role": "external_test_only",
+  "sample_count": 457,
+  "class_counts": {
+    "overripe": 216,
+    "unripe": 129,
+    "ripe": 112
+  },
+  "stage_crosswalk": {
+    "4": "unripe",
+    "5": "ripe (ripening stage merged into the app's ripe class)",
+    "6": "ripe",
+    "7": "overripe (source wording may mean rotten)"
+  },
+  "models": {
+    "classical_svm": {
+      "accuracy": 0.3413566739606127,
+      "macro_precision": 0.5419073320077014,
+      "macro_recall": 0.40678448381936755,
+      "macro_f1": 0.3355718085106383,
+      "weighted_f1": 0.31470156897434703,
+      "confusion_matrix": [
+        [
+          30,
+          180,
+          6
+        ],
+        [
+          7,
+          89,
+          16
+        ],
+        [
+          3,
+          89,
+          37
+        ]
+      ],
+      "per_class": {
+        "overripe": {
+          "precision": 0.75,
+          "recall": 0.1388888888888889,
+          "f1-score": 0.234375,
+          "support": 216.0
+        },
+        "ripe": {
+          "precision": 0.24860335195530725,
+          "recall": 0.7946428571428571,
+          "f1-score": 0.37872340425531914,
+          "support": 112.0
+        },
+        "unripe": {
+          "precision": 0.6271186440677966,
+          "recall": 0.2868217054263566,
+          "f1-score": 0.39361702127659576,
+          "support": 129.0
+        },
+        "accuracy": 0.3413566739606127,
+        "macro avg": {
+          "precision": 0.5419073320077014,
+          "recall": 0.40678448381936755,
+          "f1-score": 0.3355718085106383,
+          "support": 457.0
+        },
+        "weighted avg": {
+          "precision": 0.5924329989140923,
+          "recall": 0.3413566739606127,
+          "f1-score": 0.31470156897434703,
+          "support": 457.0
+        }
+      }
+    },
+    "compact_cnn": {
+      "accuracy": 0.5142231947483589,
+      "macro_precision": 0.5270189580534409,
+      "macro_recall": 0.5237633813215209,
+      "macro_f1": 0.4969406511551106,
+      "weighted_f1": 0.51676454797625,
+      "confusion_matrix": [
+        [
+          90,
+          118,
+          8
+        ],
+        [
+          26,
+          26,
+          60
+        ],
+        [
+          0,
+          10,
+          119
+        ]
+      ],
+      "per_class": {
+        "overripe": {
+          "precision": 0.7758620689655172,
+          "recall": 0.4166666666666667,
+          "f1-score": 0.5421686746987951,
+          "support": 216.0
+        },
+        "ripe": {
+          "precision": 0.16883116883116883,
+          "recall": 0.23214285714285715,
+          "f1-score": 0.19548872180451127,
+          "support": 112.0
+        },
+        "unripe": {
+          "precision": 0.6363636363636364,
+          "recall": 0.9224806201550387,
+          "f1-score": 0.7531645569620253,
+          "support": 129.0
+        },
+        "accuracy": 0.5142231947483589,
+        "macro avg": {
+          "precision": 0.5270189580534409,
+          "recall": 0.5237633813215209,
+          "f1-score": 0.4969406511551106,
+          "support": 457.0
+        },
+        "weighted avg": {
+          "precision": 0.5877159888327171,
+          "recall": 0.5142231947483589,
+          "f1-score": 0.51676454797625,
+          "support": 457.0
+        }
+      }
+    }
+  },
+  "cnn_inference_ms_per_image": 173.71203785557637,
+  "interpretation": "Independent-source crop-classification evidence only. The models were not fitted or tuned on these images."
+}

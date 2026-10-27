@@ -142,34 +142,56 @@ packaged app and saved weights can load and run inference in the hosted
 environment. It is operational evidence only—not evidence of real-world
 accuracy, service-level availability, or generalization.
 
-The strongest available accuracy evidence remains the publisher-held-out
-test split above. The publisher does not document farm-, camera-, or
-collection-session-independent partitions, and the data available here do not
-provide a verified independent, labeled orchard test set. The full-scene
-detector's 7.14% mAP@0.5 for generic `avocado` is a material weakness.
-Accordingly, neither model should be described as validated for production
-decisions; low-confidence or ambiguous predictions require human review.
+The publisher-held-out test split is not documented as farm-, camera-, or
+collection-session-independent. To add cross-source evidence without
+training or tuning on it, the saved crop models were also evaluated on the
+avocado-only object crops from a separately published Mendeley dataset. The
+hosted snapshot is pinned to commit
+`321578b982118c7395b6cc3c8093396886a2fa99`; it has a single publisher split
+and exposes numeric categories rather than semantic names. Only one-object
+rows labeled with avocado IDs 4-7 were retained. This produced 457 unique
+crops: 129 unripe, 112 ripe (source IDs 5 and 6 merged), and 216 overripe.
+Strawberry-only/non-avocado rows and 119 ambiguous or invalid boxes were
+excluded; no exact duplicate crops remained.
 
-To establish field generalization, obtain expert-labeled avocado images from
-farms, cameras, and collection sessions absent from training; freeze the
-models and decision thresholds before evaluation; then report per-stage
-precision, recall, macro-F1, confusion matrices, detector mAP, and performance
-by acquisition domain. This evidence cannot be produced from the current
-publisher split alone. We screened the separate 2025 Mendeley/Hugging Face
-strawberry-and-avocado dataset as a possible external holdout. Its publisher
-describes real Maharashtra farm/market collection, but the hosted 758-image
-version has only one `train` split, mixes fruit species, and exposes the
-eight categories as numeric IDs (`0`-`7`) rather than semantic class names.
-Using only the avocado categories would still require trusting an inferred
-label mapping. A separate public technical audit reports mis-scaled or
-ambiguous boxes on portrait images and synthetic cut-out backgrounds; it
-recommends manual checking before use. We therefore did not use its
-unverified labels to claim external performance. See the
+| Model | External accuracy | Macro precision | Macro recall | Macro F1 | Weighted F1 |
+|---|---:|---:|---:|---:|---:|
+| HSV/gradient + SVM | 34.14% | 54.19% | 40.68% | 33.56% | 31.47% |
+| Compact CNN | 51.42% | 52.70% | 52.38% | 49.69% | 51.68% |
+
+These are substantially below the publisher-held-out accuracy (87.03% SVM,
+79.30% CNN). The result is evidence of poor cross-source transfer, not proof
+of production readiness. In particular, ripe-stage precision/recall are
+24.86%/79.46% for the SVM and 16.88%/23.21% for the CNN. Neither crop
+classifier is suitable for unattended production decisions on this evidence.
+The detector was not evaluated on this source; its 7.14% mAP@0.5 for generic
+`avocado` on the publisher test set remains a material weakness.
+
+The external snapshot covers Maharashtra, India and is described as farm and
+market imagery, but it is one source rather than a multi-farm/camera
+benchmark. Its card provides numeric class IDs; mapping IDs 4-7 to the
+project's stages was inferred from the source scope and visually checked
+samples, not confirmed by an explicit semantic label map. The source's
+`ripening` category was merged with `ripe`, and its ID 7 wording may mean
+rotten rather than the project's overripe definition. Portrait annotations
+can also be mis-scaled or ambiguous; boxes were corrected only when exactly
+one interpretation fit and otherwise excluded. Some backgrounds are
+studio-like. Therefore this is a useful stress test, but not a definitive
+field-accuracy estimate. See the
 [Mendeley dataset record](https://data.mendeley.com/datasets/zysvgmxcyz/1),
 [Hugging Face dataset card](https://huggingface.co/datasets/Project-AgML/strawberry_avocado_ripeness_detection),
 and [public technical audit](https://github.com/CreAI-mx/agrizar_CV_datasets/blob/chore/initial-import/GROWTH_DATASET_FINDINGS.md).
-A separate 3.7 KB Kaggle result was described as synthetic and is likewise
-not suitable as independent real-orchard validation.
+The reproducible preparation and evaluation command is
+`python validate_external_avocado.py`; external images remain in the
+git-ignored `data/external_avocado_test/`, and metrics are written to
+`models/avocado_pure/external_test_metrics.json`.
+
+To establish stronger field generalization, obtain expert-labeled avocado
+images from multiple farms, cameras, and collection sessions absent from
+training. Freeze models and thresholds before evaluation, then report
+per-stage precision, recall, macro-F1, confusion matrices, detector mAP, and
+performance by acquisition domain. The current external result is not a
+substitute for that multi-domain study.
 
 The detector's precision/recall and mAP measure localization as well as class
 assignment; they must not be ranked directly against the crop classifiers'
@@ -221,14 +243,14 @@ truth, and measured prediction are stored in
 
 The best measured result is 87.03% accuracy and 86.78% macro F1 for the SVM
 on the 401-image test split. Its evaluation latency was approximately 37.50
-ms/image on this machine. The full-scene detector achieved 53.32% precision,
-74.46% recall, and 53.58% mAP@0.5 on all 453 held-out test scenes. These are
-local dataset results, not a production guarantee: deployment performance
-must be measured on independent orchard/camera data with representative
-lighting, cultivars, and collection conditions. The app is publicly deployed,
-and both hosted prediction workflows have passed smoke tests. Those checks
-prove operational inference only; the current data do not establish
-independent-field performance or a production accuracy guarantee.
+ms/image on this machine. On the separate 457-crop source, SVM accuracy and
+macro F1 fell to 34.14% and 33.56%; CNN accuracy and macro F1 were 51.42% and
+49.69%. The full-scene detector achieved 53.32% precision, 74.46% recall, and
+53.58% mAP@0.5 on the publisher's held-out scenes, but was not tested on the
+external source. These results do not support unattended production use.
+The app is publicly deployed, and both hosted prediction workflows have
+passed smoke tests. Those checks prove operational inference only, not
+production accuracy.
 
 ### 2. What are the drawbacks?
 
@@ -236,6 +258,9 @@ independent-field performance or a production accuracy guarantee.
   It cannot support partially-ripe or rotten predictions.
 - The source's published split may share collection conditions across
   partitions; no independent farm/session holdout is documented.
+- The cross-source crop test shows a substantial accuracy drop. Its single
+  source and inferred/coarsened labels also limit the strength of the
+  generalization conclusion.
 - The SVM relies on color/texture descriptors and the CNN is less accurate on
   this split. Both may fail under lighting or background shifts.
 - The detector was trained for only five epochs on 400 balanced scenes rather
@@ -249,21 +274,25 @@ independent-field performance or a production accuracy guarantee.
 ### 3. What would you improve with more time?
 
 Collect expert-verified avocado images across farms, cultivars, cameras, and
-lighting, with a held-out farm/session split. Add carefully labeled
-partially-ripe and rotten stages if those are required. Test a pretrained
-lightweight image model and calibrate its confidence on an independent
-validation set. For full-scene performance, train the detector on the
-complete training split for more epochs at a larger image size, investigate
-the weak generic-avocado results, and evaluate at multiple confidence
-thresholds on independent orchard scenes.
+lighting, with a held-out farm/session split and authoritative stage
+definitions. Use a confirmed semantic map and expert review for the external
+source labels before drawing cross-source conclusions. Investigate the large
+cross-source performance drop using training-only diagnostics, without
+repeatedly tuning against the external test set. Test a pretrained lightweight
+image model and calibrate its confidence on independent validation data. For
+full-scene performance, train the detector on the complete training split for
+more epochs at a larger image size, investigate the weak generic-avocado
+results, and evaluate at multiple confidence thresholds on independent
+orchard scenes.
 
 ### 4. Where did you spend the most time?
 
-Most effort went into confirming that the replacement source has only avocado
-classes, verifying its labels and published splits, extracting and auditing the
-stage-specific crops and full-scene annotations, then training and evaluating
-the SVM, CNN, and YOLO detector. The remaining effort integrated dataset
+Most effort went into confirming that the primary source has only avocado
+classes, verifying its labels and published splits, extracting and auditing
+the stage-specific crops and full-scene annotations, then training and
+evaluating the SVM, CNN, and YOLO detector. I also prepared an avocado-only
+cross-source holdout, reviewed its annotation limitations, and measured the
+large performance drop. The remaining effort integrated dataset
 preparation, measured examples, and both prediction workflows into the app,
-then deploying and smoke-testing the public version. Establishing field
-generalization remains future work because the available dataset does not
-include an independently sourced, labeled orchard test set.
+then deploying and smoke-testing the public version. Multi-farm/camera
+generalization remains unverified.
