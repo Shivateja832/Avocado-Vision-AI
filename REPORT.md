@@ -296,3 +296,25 @@ large performance drop. The remaining effort integrated dataset
 preparation, measured examples, and both prediction workflows into the app,
 then deploying and smoke-testing the public version. Multi-farm/camera
 generalization remains unverified.
+
+## Recruiter-style assignment assessment
+
+This is an illustrative rubric-based estimate, not an actual employer score.
+It distinguishes completion of the requested deliverables from evidence that
+the models are production-ready.
+
+| Area | Score | Assessment |
+|---|---:|---|
+| Avocado dataset selection and quality audit | 18/20 | The primary training data contains avocado-stage labels and documents imbalance, outliers, and likely biases. The external source uses an inferred, coarsened label crosswalk. |
+| Multiple approaches and model-selection rationale | 20/20 | The project implements and compares the classical SVM and compact CNN, and includes a full-scene YOLO detector with rationale for their use. |
+| Metrics and model comparison | 18/20 | Classification and detection metrics are reported. External evaluation reveals substantial cross-source degradation, and the detector's generic-avocado score is weak. |
+| Report, example run, and required questions | 20/20 | The report includes dataset analysis, model choices, metrics, an example, and answers to all four assignment questions. |
+| Application operation and verification | 9/10 | The hosted app returned HTTP 200; all 17 project tests and Python compilation passed. These checks do not certify uptime or prediction accuracy. |
+| Production readiness and generalization evidence | 4/10 | External accuracy was 34.14% for the SVM and 51.42% for the CNN. The external labels are approximate, and multi-farm/camera generalization remains unverified. |
+| **Total** | **89/100** | **Assignment deliverables are present; production generalization is not established.** |
+
+The score is not 100/100 because operational completeness cannot substitute for
+strong, independently verified field performance. A future score should be
+reassessed only after expert-confirmed labels and genuinely independent
+multi-farm/camera evaluation support improved results. Do not tune against the
+current external test set and then continue to call it an untouched test.
