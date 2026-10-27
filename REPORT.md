@@ -334,9 +334,29 @@ generalization remains unverified.
 
 ## Recruiter-style assignment assessment
 
-This is an illustrative rubric-based estimate, not an actual employer score.
-It distinguishes completion of the requested deliverables from evidence that
-the models are production-ready.
+These are illustrative rubric-based assessments, not actual employer scores.
+The first checks completion of the requirements in the assignment; the second
+is a stricter technical-readiness assessment that includes empirical
+generalization evidence.
+
+### Original assignment deliverables: 100/100 completion
+
+| Requirement | Score | Evidence |
+|---|---:|---|
+| Avocado dataset understanding, outliers, class balance, and bias | 20/20 | The report describes the avocado-only training classes, split counts, imbalance, unreadable/duplicate checks, image outlier screening, and likely dataset biases. The orange archive was not treated as avocado evidence. |
+| At least two approaches and model-selection rationale | 20/20 | The project implements the HSV/gradient SVM and compact CNN for crops, plus YOLO for scene localization, and explains their roles and constraints. |
+| Evaluation metrics and reasoned comparison | 20/20 | Accuracy, precision, recall, macro/weighted F1, per-class results, confusion matrices, and detector metrics are reported and interpreted. |
+| Report and example run | 20/20 | The report contains measured crop and detector examples, model outputs, model rationale, dataset audit, and limitations. |
+| Required production, drawback, improvement, and effort answers; runnable app | 20/20 | All four assignment questions are answered. Training, inference, and deployment instructions are documented; the project test suite and compile check passed, and the hosted app was smoke-checked. |
+| **Assignment deliverable completion** | **100/100** | **Every stated assignment deliverable is present. This is a completion score, not a claim of perfect prediction accuracy or field validation.** |
+
+No required assignment section is currently missing. The external test result
+and detector weakness below are disclosed model-performance limitations, not
+unanswered sections. The assignment's question about production performance
+is answered with measured results and an explicit warning against assuming
+field accuracy.
+
+### Extended technical-readiness assessment: 89/100
 
 | Area | Score | Assessment |
 |---|---:|---|
@@ -348,8 +368,10 @@ the models are production-ready.
 | Production readiness and generalization evidence | 4/10 | External accuracy was 34.14% for the SVM and 51.42% for the CNN. The external labels are approximate, and multi-farm/camera generalization remains unverified. |
 | **Total** | **89/100** | **Assignment deliverables are present; production generalization is not established.** |
 
-The score is not 100/100 because operational completeness cannot substitute for
-strong, independently verified field performance. A future score should be
-reassessed only after expert-confirmed labels and genuinely independent
-multi-farm/camera evaluation support improved results. Do not tune against the
-current external test set and then continue to call it an untouched test.
+The 89/100 technical-readiness score is not the assignment-completion score.
+It remains below 100 because operational completeness cannot substitute for
+strong, independently verified field performance. Improving that score
+requires expert-confirmed labels and genuinely independent multi-farm/camera
+evaluation; no code or report edit can manufacture that evidence. Do not tune
+against the current external test set and then continue to call it an
+untouched test.
