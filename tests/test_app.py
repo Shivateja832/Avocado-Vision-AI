@@ -57,3 +57,22 @@ def test_app_renders_without_streamlit_exceptions() -> None:
     assert "Download and prepare avocado dataset" in [
         button.label for button in app.button
     ]
+
+
+def test_app_guides_user_when_dataset_splits_are_missing(tmp_path: Path) -> None:
+    app_path = Path(__file__).resolve().parents[1] / "app.py"
+    missing_dataset = tmp_path / "not_prepared"
+    app = AppTest.from_file(str(app_path), default_timeout=30).run()
+    app.text_input[0].set_value(str(missing_dataset))
+    app.run()
+
+    assert not app.exception
+    assert any("Dataset splits were not found" in item.value for item in app.warning)
+    analyze_button = next(
+        button for button in app.button if button.label == "Analyze dataset"
+    )
+    assert analyze_button.disabled
+    assert any(
+        "prepare_avocado_dataset.py --output-dir" in item.value
+        for item in app.code
+    )

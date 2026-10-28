@@ -26,6 +26,31 @@ _FULL_WIDTH_OPTIONS: dict[str, str | bool] = (
     else {"use_container_width": True}
 )
 
+
+def _prepare_classification_dataset(output_dir: Path) -> None:
+    try:
+        with st.spinner(
+            "Downloading the avocado-only dataset, verifying it, and preparing avocado crops..."
+        ):
+            prepared = prepare_dataset(output_dir)
+            st.session_state["dataset_analysis"] = analyze_dataset(output_dir)
+            st.session_state.pop("training_results", None)
+        st.success(
+            f'Prepared {prepared["prepared_crop_count"]} avocado-only crops '
+            "in train/validation/test splits."
+        )
+    except (
+        FileExistsError,
+        FileNotFoundError,
+        OSError,
+        ValueError,
+        RuntimeError,
+        requests.RequestException,
+        zipfile.BadZipFile,
+    ) as exc:
+        st.error(f"Dataset preparation failed: {exc}")
+
+
 st.set_page_config(page_title="AvocadoVision AI", page_icon="🥑", layout="wide")
 st.title("AvocadoVision AI")
 st.caption(
@@ -44,27 +69,7 @@ with st.expander("Dataset source and setup"):
         "used as a crop-classifier stage."
     )
     if st.button("Download and prepare avocado dataset", key="prepare_dataset"):
-        try:
-            with st.spinner(
-                "Downloading the avocado-only dataset, verifying it, and preparing avocado crops..."
-            ):
-                prepared = prepare_dataset(DEFAULT_DATA_DIR)
-                st.session_state["dataset_analysis"] = analyze_dataset(DEFAULT_DATA_DIR)
-                st.session_state.pop("training_results", None)
-            st.success(
-                f'Prepared {prepared["prepared_crop_count"]} avocado-only crops '
-                "in train/validation/test splits."
-            )
-        except (
-            FileExistsError,
-            FileNotFoundError,
-            OSError,
-            ValueError,
-            RuntimeError,
-            requests.RequestException,
-            zipfile.BadZipFile,
-        ) as exc:
-            st.error(f"Dataset preparation failed: {exc}")
+        _prepare_classification_dataset(DEFAULT_DATA_DIR)
     if st.button(
         "Prepare full-scene avocado detection data", key="prepare_detection_dataset"
     ):
@@ -92,6 +97,7 @@ with st.expander("Dataset source and setup"):
 
 data_dir_text = st.text_input("Dataset folder", str(DEFAULT_DATA_DIR))
 data_dir = Path(data_dir_text).expanduser()
+dataset_ready = (data_dir / "train").is_dir() and (data_dir / "test").is_dir()
 if "training_results" not in st.session_state and RESULTS_PATH.is_file():
     try:
         saved_results = json.loads(RESULTS_PATH.read_text(encoding="utf-8"))
@@ -110,7 +116,23 @@ tab_data, tab_models, tab_predict = st.tabs(
 
 with tab_data:
     st.subheader("Dataset quality and class balance")
-    if st.button("Analyze dataset", key="analyze"):
+    if not dataset_ready:
+        st.warning(
+            f"Dataset splits were not found in {data_dir}. Prepare the avocado "
+            "dataset before analysis, or choose a folder containing train/ and test/."
+        )
+        if data_dir.resolve() == DEFAULT_DATA_DIR.resolve():
+            if st.button(
+                "Download and prepare dataset now",
+                key="prepare_missing_classification_dataset",
+            ):
+                _prepare_classification_dataset(DEFAULT_DATA_DIR)
+        else:
+            st.code(
+                f'python prepare_avocado_dataset.py --output-dir "{data_dir}"',
+                language="powershell",
+            )
+    if st.button("Analyze dataset", key="analyze", disabled=not dataset_ready):
         try:
             st.session_state["dataset_analysis"] = analyze_dataset(data_dir)
         except (FileNotFoundError, ValueError, OSError) as exc:

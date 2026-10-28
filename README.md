@@ -26,6 +26,10 @@ The crop-classification data and provenance manifest are written to
 bounding boxes for only the source's avocado categories, is written to
 `data/avocado_detection/`. Both scripts verify the public archive's exact
 size, SHA-256, ZIP integrity, source label schema, and publisher splits.
+Dataset inspection requires the prepared `train/` and `test/` folders. If
+they are missing, use the app's **Download and prepare dataset now** action,
+or run `python prepare_avocado_dataset.py` in the project root before
+analyzing or training.
 
 ## Train and run
 
