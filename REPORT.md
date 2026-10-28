@@ -332,46 +332,18 @@ preparation, measured examples, and both prediction workflows into the app,
 then deploying and smoke-testing the public version. Multi-farm/camera
 generalization remains unverified.
 
-## Recruiter-style assignment assessment
+## Assignment requirement coverage
 
-These are illustrative rubric-based assessments, not actual employer scores.
-The first checks completion of the requirements in the assignment; the second
-is a stricter technical-readiness assessment that includes empirical
-generalization evidence.
+| Requirement | Status | Evidence in this project |
+|---|---|---|
+| Understand the dataset, including outliers, imbalance, and biases | Addressed | Dataset inspection and limitations are documented above. |
+| Implement and compare at least two approaches; explain model choice | Addressed | The report compares the HSV/gradient SVM and compact CNN, and describes the YOLO full-scene detector. |
+| Select and explain suitable evaluation metrics | Addressed | Classification and detection metrics, class-level results, and confusion matrices are reported above. |
+| Provide a report and an example run | Addressed | Measured crop and full-scene examples are documented above. |
+| Answer the four questions about production performance, drawbacks, improvements, and effort | Addressed | Answers are included in the required questions section above. |
 
-### Original assignment deliverables: 100/100 completion
-
-| Requirement | Score | Evidence |
-|---|---:|---|
-| Avocado dataset understanding, outliers, class balance, and bias | 20/20 | The report describes the avocado-only training classes, split counts, imbalance, unreadable/duplicate checks, image outlier screening, and likely dataset biases. The orange archive was not treated as avocado evidence. |
-| At least two approaches and model-selection rationale | 20/20 | The project implements the HSV/gradient SVM and compact CNN for crops, plus YOLO for scene localization, and explains their roles and constraints. |
-| Evaluation metrics and reasoned comparison | 20/20 | Accuracy, precision, recall, macro/weighted F1, per-class results, confusion matrices, and detector metrics are reported and interpreted. |
-| Report and example run | 20/20 | The report contains measured crop and detector examples, model outputs, model rationale, dataset audit, and limitations. |
-| Required production, drawback, improvement, and effort answers; runnable app | 20/20 | All four assignment questions are answered. Training, inference, and deployment instructions are documented; the project test suite and compile check passed, and the hosted app was smoke-checked. |
-| **Assignment deliverable completion** | **100/100** | **Every stated assignment deliverable is present. This is a completion score, not a claim of perfect prediction accuracy or field validation.** |
-
-No required assignment section is currently missing. The external test result
-and detector weakness below are disclosed model-performance limitations, not
-unanswered sections. The assignment's question about production performance
-is answered with measured results and an explicit warning against assuming
-field accuracy.
-
-### Extended technical-readiness assessment: 89/100
-
-| Area | Score | Assessment |
-|---|---:|---|
-| Avocado dataset selection and quality audit | 18/20 | The primary training data contains avocado-stage labels and documents imbalance, outliers, and likely biases. The external source uses an inferred, coarsened label crosswalk. |
-| Multiple approaches and model-selection rationale | 20/20 | The project implements and compares the classical SVM and compact CNN, and includes a full-scene YOLO detector with rationale for their use. |
-| Metrics and model comparison | 18/20 | Classification and detection metrics are reported. External evaluation reveals substantial cross-source degradation, and the detector's generic-avocado score is weak. |
-| Report, example run, and required questions | 20/20 | The report includes dataset analysis, model choices, metrics, an example, and answers to all four assignment questions. |
-| Application operation and verification | 9/10 | The hosted app returned HTTP 200; all 17 project tests and Python compilation passed. These checks do not certify uptime or prediction accuracy. |
-| Production readiness and generalization evidence | 4/10 | External accuracy was 34.14% for the SVM and 51.42% for the CNN. The external labels are approximate, and multi-farm/camera generalization remains unverified. |
-| **Total** | **89/100** | **Assignment deliverables are present; production generalization is not established.** |
-
-The 89/100 technical-readiness score is not the assignment-completion score.
-It remains below 100 because operational completeness cannot substitute for
-strong, independently verified field performance. Improving that score
-requires expert-confirmed labels and genuinely independent multi-farm/camera
-evaluation; no code or report edit can manufacture that evidence. Do not tune
-against the current external test set and then continue to call it an
-untouched test.
+This checklist maps to the assignment text; it is not an employer score or a
+claim of perfect model accuracy. The production-performance answer reports
+measured results and their limitations. The lower cross-source scores and
+unverified multi-farm/camera performance are disclosed technical limitations,
+not additional requirements introduced by this checklist.
