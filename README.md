@@ -32,7 +32,7 @@ size, SHA-256, ZIP integrity, source label schema, and publisher splits.
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt
 python prepare_avocado_dataset.py
 python train.py
 python prepare_detector_dataset.py
@@ -99,6 +99,16 @@ The deployed app is a demonstration, not a production service with a verified
 uptime or accuracy guarantee. Do not commit account secrets or Kaggle tokens.
 
 ## Verification
+
+Install the development/test dependencies (the file also installs the
+application dependencies) before running tests:
+
+```powershell
+python -m pip install -r requirements-dev.txt
+```
+
+For a deployment/runtime-only environment, install `requirements.txt`;
+pytest is kept out of the application runtime dependencies.
 
 ```powershell
 python -m pytest -q tests
