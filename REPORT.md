@@ -312,29 +312,3 @@ large performance drop. The remaining effort integrated dataset
 preparation, measured examples, and both prediction workflows into the app,
 then deploying and smoke-testing the public version. Multi-farm/camera
 generalization remains unverified.
-
-## Assignment requirement coverage
-
-The following illustrative score is based only on the assignment and
-application requirements provided for this project. It measures completion
-of requested deliverables, not a recruiter's decision, model accuracy, or a
-guarantee of production performance.
-
-| Requirement area | Score | Evidence |
-|---|---:|---|
-| Dataset understanding: outliers, imbalance, and bias | 20/20 | Avocado-stage data counts, class balance, outlier screening, duplicate/readability checks, and potential biases are documented. |
-| At least two approaches and model-selection reasoning | 20/20 | The SVM and compact CNN are compared, and YOLO provides the full-scene detection approach. Selection rationale and constraints are explained. |
-| Evaluation metrics and comparison | 20/20 | Accuracy, precision, recall, macro/weighted F1, per-class results, confusion matrices, and detector metrics are reported and interpreted. |
-| Report, example run, and four mandatory assignment answers | 20/20 | The report contains measured examples and answers all four required questions, including a candid production-performance answer. |
-| Complete runnable/deployed application and verification | 20/20 | The app is deployed; all 17 project tests passed, Python compilation passed, and the hosted endpoint returned HTTP 200 in the recorded smoke check. |
-| **Total requirement-completion score** | **100/100** | **All stated assignment/application deliverables are addressed.** |
-
-This 100/100 is specifically a requirement-completion score: it does not mean
-100% prediction accuracy, and it does not claim that cross-source performance
-is strong. The production question is satisfied by reporting actual measured
-results and limitations. The separate external evaluation (SVM 34.14%
-accuracy; CNN 51.42% accuracy) and weak generic-avocado detector result
-(7.14% mAP@0.5) remain transparently reported as model-performance results;
-they are not additional pass/fail requirements in the assignment rubric.
-The supplied orange archive was not used as avocado data; avocado-labeled
-sources were used for the avocado task.
