@@ -140,8 +140,11 @@ with tab_data:
 
     analysis = st.session_state.get("dataset_analysis")
     if (
-        analysis
-        and Path(analysis.get("data_dir", "")).resolve() != data_dir.resolve()
+        not dataset_ready
+        or (
+            analysis
+            and Path(analysis.get("data_dir", "")).resolve() != data_dir.resolve()
+        )
     ):
         analysis = None
     if analysis:

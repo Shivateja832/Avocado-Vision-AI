@@ -35,7 +35,15 @@ def test_app_renders_without_streamlit_exceptions() -> None:
         "Train and compare",
         "Example prediction",
     ]
-    assert app.tabs[0].metric[0].value == "3996 / 3996"
+    dataset_root = app_path.parent / "data" / "avocado_pure"
+    if (dataset_root / "train").is_dir() and (dataset_root / "test").is_dir():
+        assert app.tabs[0].metric[0].value == "3996 / 3996"
+    else:
+        assert not app.tabs[0].metric
+        assert any(
+            "Dataset splits were not found" in item.value
+            for item in app.tabs[0].warning
+        )
     assert app.tabs[1].success[0].value.startswith(
         "Best macro F1 on this held-out test split:"
     )
