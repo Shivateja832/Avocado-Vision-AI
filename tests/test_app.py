@@ -72,6 +72,13 @@ def test_app_guides_user_when_dataset_splits_are_missing(tmp_path: Path) -> None
         button for button in app.button if button.label == "Analyze dataset"
     )
     assert analyze_button.disabled
+    assert not app.tabs[0].metric
+    crop_training_button = next(
+        button
+        for button in app.tabs[1].button
+        if button.label == "Train both models"
+    )
+    assert crop_training_button.disabled
     assert any(
         "prepare_avocado_dataset.py --output-dir" in item.value
         for item in app.code

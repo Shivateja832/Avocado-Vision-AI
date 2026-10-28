@@ -139,6 +139,11 @@ with tab_data:
             st.error(f"Dataset analysis failed: {exc}")
 
     analysis = st.session_state.get("dataset_analysis")
+    if (
+        analysis
+        and Path(analysis.get("data_dir", "")).resolve() != data_dir.resolve()
+    ):
+        analysis = None
     if analysis:
         st.metric("Readable images", f'{analysis["valid_images"]} / {analysis["total_images"]}')
         st.write(
@@ -166,7 +171,11 @@ with tab_data:
 with tab_models:
     st.subheader("Held-out test comparison")
     max_epochs = st.slider("CNN maximum epochs", min_value=4, max_value=30, value=16)
-    if st.button("Train both models", type="primary"):
+    if not dataset_ready:
+        st.info("Prepare the selected avocado dataset before training the crop models.")
+    if st.button(
+        "Train both models", type="primary", disabled=not dataset_ready
+    ):
         try:
             with st.spinner("Training SVM and compact CNN; the test split is held out..."):
                 dataset_analysis = st.session_state.get("dataset_analysis")
@@ -187,10 +196,18 @@ with tab_models:
 
     st.divider()
     st.subheader("Train full-scene detector")
+    detector_data_ready = (DEFAULT_DETECTION_DATA_DIR / "data.yaml").is_file() and all(
+        (DEFAULT_DETECTION_DATA_DIR / "images" / split).is_dir()
+        for split in ("train", "validation", "test")
+    )
+    if not detector_data_ready:
+        st.info(
+            "Prepare full-scene avocado detection data before training the detector."
+        )
     detector_epochs = st.slider(
         "Detector maximum epochs", min_value=1, max_value=30, value=5
     )
-    if st.button("Train avocado detector"):
+    if st.button("Train avocado detector", disabled=not detector_data_ready):
         try:
             with st.spinner(
                 "Fine-tuning the avocado detector, then evaluating on the held-out test scenes..."
